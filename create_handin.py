@@ -18,7 +18,7 @@ def main():
     members = sorted([
         TeamMember(["Ergin"], ["Kohen", "Sagner"]),
         TeamMember(["Nicolas"], ["Wolf"]),
-        TeamMember(["Lars", "Erik"], ["Kühmichel"]),
+        TeamMember(["Lars", "Erik"], ["Kuehmichel"]),
     ], key=lambda t: "".join(t.last_names + t.first_names))
 
     # members string where individual members are separated by _
