@@ -16,12 +16,14 @@ class TeamMember:
 
 def main():
 
+    # members with first and last names, must be sorted by last names, then first names
     members = sorted([
         TeamMember(["Ergin"], ["Kohen", "Sagner"]),
         TeamMember(["Nicolas"], ["Wolf"]),
         TeamMember(["Lars", "Erik"], ["Kühmichel"]),
     ], key=lambda t: "".join(t.last_names + t.first_names))
 
+    # members string where individual members are separated by _
     members = "_".join([str(m) for m in members])
 
     parser = argparse.ArgumentParser(description="Automatically create the hand-in file for the lecture FML.")
@@ -46,8 +48,10 @@ def main():
 
     zip_path = ex_path / (members + "_" + args.name + ".zip")
 
+    # create the zip hand-in file
     zipf = zipfile.ZipFile(zip_path, "w")
 
+    # add the html and notebook to the zip
     zipf.write(html_file, html_file.name)
     zipf.write(nb_file, nb_file.name)
 
