@@ -1,4 +1,3 @@
-
 import argparse
 import zipfile
 import subprocess
@@ -15,7 +14,6 @@ class TeamMember:
 
 
 def main():
-
     # members with first and last names, must be sorted by last names, then first names
     members = sorted([
         TeamMember(["Ergin"], ["Kohen", "Sagner"]),
@@ -27,8 +25,11 @@ def main():
     members = "_".join([str(m) for m in members])
 
     parser = argparse.ArgumentParser(description="Automatically create the hand-in file for the lecture FML.")
-    parser.add_argument("name", type=str, help="The name of the exercise, to be included at the end of the zip filename.")
+    parser.add_argument("name", type=str,
+                        help="The name of the exercise, to be included at the end of the zip filename.")
     parser.add_argument("notebook", type=str, help="The name of the Jupyter Notebook")
+    parser.add_argument("-m", "--more", type=str,
+                        help="Glob Pattern to determine additional files which should be added to the Hand-In.")
 
     args = parser.parse_args()
 
@@ -54,6 +55,14 @@ def main():
     # add the html and notebook to the zip
     zipf.write(html_file, html_file.name)
     zipf.write(nb_file, nb_file.name)
+
+    if args.more:
+        files = list(ex_path.glob(args.more))
+        print(f"adding {len(files)} more files...")
+
+        for file in ex_path.glob(args.more):
+            # add the file without adding the ex_path folder in
+            zipf.write(file, pathlib.Path(*file.parts[1:]))
 
     zipf.close()
 
