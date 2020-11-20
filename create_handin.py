@@ -2,6 +2,11 @@ import argparse
 import zipfile
 import subprocess
 import pathlib
+import warnings
+
+
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
 
 
 class TeamMember:
@@ -10,7 +15,7 @@ class TeamMember:
         self.last_names = last_names
 
     def __str__(self):
-        return "-".join(self.last_names + self.first_names)
+        return "-".join(self.last_names + self.first_names).lower()
 
 
 def main():
@@ -23,6 +28,9 @@ def main():
 
     # members string where individual members are separated by _
     members = "_".join([str(m) for m in members])
+
+    if not is_ascii(members):
+        warnings.warn("Members contain unicode characters, which may violate the naming convention.")
 
     parser = argparse.ArgumentParser(description="Automatically create the hand-in file for the lecture FML.")
     parser.add_argument("name", type=str,
