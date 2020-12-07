@@ -10,7 +10,11 @@ class TeamMember:
         self.last_names = last_names
 
     def __str__(self):
-        return "-".join(self.last_names + self.first_names).lower()
+        return "-".join(self.first_names + self.last_names).lower()
+
+    def __lt__(self, other):
+        # define sorting order for TeamMembers
+        return "".join(self.first_names + self.last_names) < "".join(other.last_names + other.first_names)
 
 
 def is_ascii(s):
@@ -89,12 +93,12 @@ def convert_ipynb_html(path):
 
 
 def main():
-    # members with first and last names, must be sorted by last names, then first names
+    # members must be sorted
     members = sorted([
         TeamMember(["Ergin"], ["Kohen", "Sagner"]),
         TeamMember(["Nicolas"], ["Wolf"]),
         TeamMember(["Lars", "Erik"], ["Kuehmichel"]),
-    ], key=lambda t: "".join(t.last_names + t.first_names))
+    ])
 
     # members string where individual members are separated by _
     members = "_".join([str(m) for m in members])
