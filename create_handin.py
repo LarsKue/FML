@@ -95,7 +95,6 @@ def convert_ipynb_html(path):
 def main():
     # members must be sorted
     members = sorted([
-        TeamMember(["Ergin"], ["Kohen", "Sagner"]),
         TeamMember(["Nicolas"], ["Wolf"]),
         TeamMember(["Lars", "Erik"], ["Kuehmichel"]),
     ])
