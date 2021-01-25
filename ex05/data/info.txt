@@ -1,0 +1,8 @@
+The material for this sheet contains the list of angles and the measured sensor data for two versions of the experiment.
+
+The smaller one was created with image size 77 x 77, sensor size 109 and 90 projection angles.
+The larger one was created with image size 195 x 195, sensor size 275 and 179 projection angles.
+
+The corresponding files are called 'y_77.npy', 'alphas_77.npy', 'y_195.npy' and 'alphas_195.npy'.
+
+Unless you have a fairly powerful machine, we recommend starting with the smaller version of the data.
