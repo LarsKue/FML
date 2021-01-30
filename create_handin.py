@@ -42,11 +42,16 @@ def yesno(msg, default=None):
     return answer
 
 
-def find_notebooks(path: pathlib.Path):
+def find_notebooks(path: pathlib.Path, ignore: str = None):
     # autodetect the notebook files
-    ccommented = set(path.glob("*-cross-commented.ipynb"))
-    commented = set(path.glob("*-commented.ipynb")) - ccommented
-    notebook = set(path.glob("*.ipynb")) - commented - ccommented
+    if ignore is None:
+        ignore = set()
+    else:
+        ignore = set(path.glob(ignore))
+
+    ccommented = set(path.glob("*-cross-commented.ipynb")) - ignore
+    commented = set(path.glob("*-commented.ipynb")) - ccommented - ignore
+    notebook = set(path.glob("*.ipynb")) - commented - ccommented - ignore
 
     # exception handling
     if len(notebook) > 1:
@@ -80,8 +85,8 @@ def find_notebooks(path: pathlib.Path):
         ccommented = ccommented.pop()
         print(f"Found cross-commented notebook {ccommented}")
 
-    # return all available notebooks
-    return notebook, commented, ccommented
+    # return all available notebooks and ignored files
+    return notebook, commented, ccommented, ignore
 
 
 def convert_ipynb_html(path):
@@ -110,6 +115,9 @@ def main():
                         help="The name of the exercise, to be included at the end of the zip filename.")
     parser.add_argument("-m", "--more", type=str,
                         help="Glob Pattern to determine additional files which should be added to the Hand-In.")
+    parser.add_argument("--ignore", type=str,
+                        help="Glob Pattern to determine which files should be ignored. "
+                             "This takes priority over all other file detections.")
 
     args = parser.parse_args()
 
@@ -119,7 +127,7 @@ def main():
         raise ValueError(f"Exercise Path '{args.name}' does not exist.")
 
     # first check for notebooks before creating zip file
-    nb, com, ccom = find_notebooks(ex_path)
+    nb, com, ccom, ignore = find_notebooks(ex_path, args.ignore)
 
     zip_path = ex_path / (members + "_" + args.name + ".zip")
 
@@ -143,7 +151,7 @@ def main():
         zipf.write(ccom_html, ccom_html.name)
 
     if args.more:
-        files = list(ex_path.glob(args.more))
+        files = set(ex_path.glob(args.more)) - ignore
         print(f"adding {len(files)} more files...")
 
         for file in ex_path.glob(args.more):
